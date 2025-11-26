@@ -1,5 +1,5 @@
 import React from "react";
-import { Appbar, Toolbar, Button, Typography } from "@mui/material";
+import { AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
@@ -11,7 +11,7 @@ export default function Navbar() {
     };
 
     return(
-        <Appbar position="static" sx={{ background: "#2e7d32"}}>
+        <AppBar position="static" sx={{ background: "#2e7d32"}}>
             <Toolbar>
 
                 <Typography variant="h6" sx={{ flexGrow: 1}}>
@@ -30,6 +30,6 @@ export default function Navbar() {
                     Logout
                 </Button>
             </Toolbar>
-        </Appbar>
+        </AppBar>
     );
 }
