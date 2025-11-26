@@ -1,24 +1,41 @@
 import logo from './logo.svg';
 import './App.css';
+import { useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+
+import Login from "./components/Login";
+import SignUp from './components/SignUp';
+import EmployeeList from './components/EmployeeList';
+import AddEmployee from './components/AddEmployee';
+import UpdateEmployee from './components/UpdateEmployee';
+import EmployeeDetails from './components/EmployeeDetails';
+
+function Layout({children}){
+  const location = useLocation();
+  const hideNavbar = location.pathname === "/" || location.pathname === "/signup";
+
+  return (
+    <>
+    {!hideNavbar && <Navbar />}
+    {children}
+    </>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Login/>}/>
+          <Route path="/signup" element={<SignUp/>}/>
+          <Route path="/employees" element={<EmployeeList/>}/>
+          <Route path="/employee/add" element={<AddEmployee/>}/>
+          <Route path="/employee/update/:id" element={<UpdateEmployee/>}/>
+          <Route path="employees/details/:id" element={<EmployeeDetails/>}/>
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
