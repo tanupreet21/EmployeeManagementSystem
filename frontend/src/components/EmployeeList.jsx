@@ -37,6 +37,17 @@ const EmployeeList = () => {
         fetchEmployees();
     }, []);
 
+    const handleDelete = async (id) => {
+        if (!window.confirm("Delete this employee?")) return;
+
+        try {
+          await axios.delete(`/employees/${id}`);
+          setEmployees((prev) => prev.filter((e) => e._id !== id));
+        } catch (err) {
+          console.error("Delete failed:", err);
+        }
+    };
+
     const filteredEmployees = employees.filter((emp) =>
         `${emp.first_name} ${emp.last_name}`
             .toLowerCase().includes(search.toLowerCase())
@@ -90,7 +101,7 @@ const EmployeeList = () => {
                                                 <TableCell align="center">
                                                     <IconButton color="primary" onClick={() => alert(`View ${emp.first_name}`)}><Visibility /></IconButton>
                                                     <IconButton color="secondary" onClick={() => alert(`Edit ${emp.first_name}`)}><Edit /></IconButton>
-                                                    <IconButton color="error" onClick={() => alert(`Delete ${emp.first_name}`)}><Delete /></IconButton>
+                                                    <IconButton color="error" onClick={() => handleDelete(emp._id)}><Delete /></IconButton>
                                                 </TableCell>
 
                                             </TableRow>
