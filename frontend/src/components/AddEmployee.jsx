@@ -1,5 +1,5 @@
 export default function AddEmployee(){
     return (
-        <h1>Add employee Page</h1>
+        <h1>Add Employee Page</h1>
     );
 }
