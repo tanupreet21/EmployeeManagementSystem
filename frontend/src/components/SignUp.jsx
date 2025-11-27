@@ -13,7 +13,7 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const[form, setForm] = useState({
-        name:"",
+        userName:"",
         email:"",
         password:"",
         confirmPassword:""
@@ -28,7 +28,7 @@ const SignUp = () => {
     const validate = () => {
         const err = {};
     
-        if (!form.name.trim()) err.name = "Name is required";
+        if (!form.userName.trim()) err.userName = "Username is required";
         if (!form.email.trim()) err.email = "Email is required";
         else if (!/\S+@\S+\.\S+/.test(form.email))
           err.email = "Invalid email format";
@@ -69,13 +69,13 @@ const SignUp = () => {
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
-                label="Name"
-                name="name"
+                label="Username"
+                name="username"
                 margin="normal"
-                value={form.name}
+                value={form.UserName}
                 onChange={handleChange}
-                error={Boolean(errors.name)}
-                helperText={errors.name}
+                error={Boolean(errors.userName)}
+                helperText={errors.userName}
               />
     
               <TextField
