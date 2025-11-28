@@ -7,11 +7,10 @@ const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
 const app = express();
 
-// Allow requests from frontend
-app.use(cors({
-    origin: "http://localhost:3001",  // your frontend URL
-    credentials: true
-  }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3001", // host
+  "http://frontend:3000" // container-to-container
+];
 
 app.use(express.json()); // parse requests that have JSON body
 app.use('/uploads', express.static('uploads'));

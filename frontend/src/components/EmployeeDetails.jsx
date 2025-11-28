@@ -10,6 +10,9 @@ export default function EmployeeDetails(){
     const [emp, setEmp] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const backendURL = process.env.REACT_APP_BACKEND_URL;
+
+
     useEffect(() => {
         const fetchEmployee = async () => {
           try {
@@ -22,7 +25,7 @@ export default function EmployeeDetails(){
           }
         };
         fetchEmployee();
-    }, [id]);
+    }, [id, backendURL]);
 
     if (loading) return <Typography p={4}>Loading...</Typography>;
     if (!emp) return <Typography p={4}>Employee not found</Typography>;
@@ -38,7 +41,7 @@ export default function EmployeeDetails(){
                 {emp.profilePic && (
                 <Box display="flex" justifyContent="center" my={2}>
                     <img
-                    src={`http://localhost:3000/uploads/${emp.profilePic}`}
+                    src={`${backendURL}/uploads/${emp.profilePic}`}
                     alt={`${emp.first_name} ${emp.last_name}`}
                     style={{ width: 120, height: 120, borderRadius: "50%", objectFit: "cover" }}
                     />

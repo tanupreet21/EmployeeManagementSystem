@@ -18,6 +18,8 @@ export default function UpdateEmployee(){
     const { id } = useParams();
     const navigate = useNavigate();
 
+    const backendURL = process.env.REACT_APP_BACKEND_URL;
+
     const [ form, setForm ] = useState({
         first_name:"",
         last_name:"",
@@ -50,7 +52,8 @@ export default function UpdateEmployee(){
             });
 
             if (res.data.profilePic) {
-                setPreview(`http://localhost:3000/uploads/${res.data.profilePic}`);
+                setPreview(`${backendURL}/uploads/${res.data.profilePic}`);
+
             }
         } catch (error) {
             console.error("Error fetching employee:", error);
@@ -59,7 +62,7 @@ export default function UpdateEmployee(){
         }
         };
         fetchEmployee();
-    }, [id]);
+    }, [id, backendURL]);
 
     const handleChange = (e) => {
         setForm({...form, [e.target.name]: e.target.value});
