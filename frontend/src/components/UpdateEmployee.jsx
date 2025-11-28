@@ -31,6 +31,9 @@ export default function UpdateEmployee(){
     const [errors, setErrors] = useState({});
     const[loading, setLoading] = useState(true);
 
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState("");
+
     // Fetch employee details to prefill form
     useEffect(() => {
         const fetchEmployee = async () => {
@@ -45,6 +48,10 @@ export default function UpdateEmployee(){
             date_of_joining: res.data.date_of_joining?.split("T")[0],
             department: res.data.department,
             });
+
+            if (res.data.profilePic) {
+                setPreview(`http://localhost:3000/uploads/${res.data.profilePic}`);
+            }
         } catch (error) {
             console.error("Error fetching employee:", error);
         } finally {
@@ -74,18 +81,34 @@ export default function UpdateEmployee(){
         setErrors(err);
         return Object.keys(err).length === 0;
     };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+        setPreview(URL.createObjectURL(file));
+    };
+    
     
     const handleSubmit = async (e) => {
         e.preventDefault();
     
         if (!validate()) return;
     
+
+        const formData = new FormData();
+        for (const key in form) {
+          formData.append(key, form[key]);
+        }
+    
+        if (image) {
+          formData.append("profilePic", image);
+        }
+    
         try {
-            await axios.put(`/emp/employees/${id}`, {
-                ...form,
-                salary: Number(form.salary),
-                date_of_joining: new Date(form.date_of_joining),
-            });
+          await axios.put(`/emp/employees/${id}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+    
           navigate("/employees");
         } catch (error) {
           console.error("Error updating employee:", error);
@@ -108,6 +131,28 @@ export default function UpdateEmployee(){
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
+            
+                    <Box textAlign="center" mb={2}>
+                        {preview && (
+                        <img
+                            src={preview}
+                            alt="Profile Preview"
+                            style={{
+                            width: 110,
+                            height: 110,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            marginBottom: 8,
+                            }}
+                        />
+                        )}
+
+                        <Button variant="outlined" component="label">
+                        Change Picture
+                        <input hidden type="file" accept="image/*" onChange={handleFileChange} />
+                        </Button>
+                    </Box>
+
                     <TextField
                         fullWidth
                         label="First Name"

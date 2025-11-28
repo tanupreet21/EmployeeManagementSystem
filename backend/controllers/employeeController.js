@@ -9,8 +9,14 @@ exports.getAllEmployees = async(req, res) => {
 
 // Create new employee
 exports.createEmployee = async(req, res) => {
-    const employee = await Employee.create(req.body);
-    res.status(201).json({ message: "Employee created successfully.", employee_id: employee._id});
+    try {
+        const profilePic = req.file ? req.file.filename : null;
+        const employeeData = { ...req.body, profilePic };
+        const employee = await Employee.create(employeeData);
+        res.status(201).json({ message: "Employee created successfully.", employee_id: employee._id });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
 // Get one employee by id
@@ -25,12 +31,18 @@ exports.getEmployeeById = async(req, res) => {
 
 // Update an employee by id
 exports.updateEmployee = async(req, res) => {
-    //find employee by id and update it
-    const employee = await Employee.findByIdAndUpdate(req.params.eid, req.body, { new: true, runValidators: true });
-    if(!employee){
-        return res.status(404).json({ message: "Employee not found."});
+    try {
+        const updateData = { ...req.body };
+        if(req.file) updateData.profilePic = req.file.filename;
+
+        const employee = await Employee.findByIdAndUpdate(req.params.eid, updateData, { new: true, runValidators: true });
+        if(!employee){
+            return res.status(404).json({ message: "Employee not found."});
+        }
+        res.status(200).json({ message: "Employee details updated successfully."});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    res.status(200).json({ message: "Employee details updated successfully."});
 }
 
 // Delete an employee by id

@@ -35,6 +35,16 @@ export default function EmployeeDetails(){
                 </Typography>
                 <Divider/>
 
+                {emp.profilePic && (
+                <Box display="flex" justifyContent="center" my={2}>
+                    <img
+                    src={`http://localhost:3000/uploads/${emp.profilePic}`}
+                    alt={`${emp.first_name} ${emp.last_name}`}
+                    style={{ width: 120, height: 120, borderRadius: "50%", objectFit: "cover" }}
+                    />
+                </Box>
+                )}
+
                 <Typography mt={2}><b>Name:</b> {emp.first_name} {emp.last_name}</Typography>
                 <Typography><b>Email:</b> {emp.email}</Typography>
                 <Typography><b>Position:</b> {emp.position}</Typography>

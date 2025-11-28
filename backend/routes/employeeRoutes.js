@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const upload = require('../middleware/upload');
 // Import controller functions
 const {
     getAllEmployees,
@@ -23,9 +24,9 @@ router.use(auth);
 router.get('/employees/search', searchEmployees);
 //Validation middleware runs before controller
 router.get('/employees', getAllEmployees);
-router.post('/employees', validateEmployee, createEmployee);
+router.post('/employees', upload.single("profilePic"), validateEmployee, createEmployee);
 router.get('/employees/:eid', validateEmployeeId, getEmployeeById);
-router.put('/employees/:eid', validateEmployeeId, validateEmployee, updateEmployee);
+router.put('/employees/:eid',upload.single("profilePic"), validateEmployeeId, validateEmployee, updateEmployee);
 router.delete('/employees/:eid', validateEmployeeId, deleteEmployee);
 
 

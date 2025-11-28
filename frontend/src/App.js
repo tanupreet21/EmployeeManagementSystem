@@ -1,7 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route,useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
-
 import Login from "./components/Login";
 import SignUp from './components/SignUp';
 import EmployeeList from './components/EmployeeList';
@@ -9,8 +8,10 @@ import AddEmployee from './components/AddEmployee';
 import UpdateEmployee from './components/UpdateEmployee';
 import EmployeeDetails from './components/EmployeeDetails';
 
+
 function Layout({children}){
   const location = useLocation();
+
   const hideNavbar = location.pathname === "/" || location.pathname === "/signup" || location.pathname === "/login";
 
   return (
@@ -27,6 +28,7 @@ function App() {
       <Layout>
         <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/employees" element={<EmployeeList />} />
         <Route path="/employees/add" element={<AddEmployee />} />

@@ -66,6 +66,10 @@ exports.validateEmployee = [
     body('date_of_joining')
         .notEmpty().withMessage('Hire date is required')
         .isISO8601().withMessage('Hire date must be valid (YYYY-MM-DD)'),
+    body('position')
+        .notEmpty().withMessage('Position is required'),
+    body('department')
+        .notEmpty().withMessage('Department is required'),    
 
     (req, res, next) => {
         const errors = validationResult(req);

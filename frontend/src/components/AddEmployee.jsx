@@ -27,6 +27,9 @@ const AddEmployee = () => {
         department:""
     });
 
+    const [profilePic, setProfilePic] = useState(null);
+    const [preview, setPreview] = useState(null);
+
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
@@ -34,6 +37,14 @@ const AddEmployee = () => {
             ...form, [e.target.name]: e.target.value
         });
     };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          setProfilePic(file);
+          setPreview(URL.createObjectURL(file));
+        }
+      };
 
     const validateEmployee = (form) => {
         const errors = {};
@@ -68,21 +79,49 @@ const AddEmployee = () => {
 
         e.preventDefault();
 
+            // Add frontend validation for all required fields
         const validationErrors = validateEmployee(form);
+        if (!form.position) validationErrors.position = "Position is required";
+        if (!form.department) validationErrors.department = "Department is required";
+        
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length > 0) return;
 
-        const payload = {
-            ...form,
-            salary: Number(form.salary),
-            date_of_joining: new Date(form.date_of_joining)
-          };         
+        const formData = new FormData();
+ 
+            // Append all fields to FormData
+        Object.keys(form).forEach((key) => {
+            if (key === "salary") {
+                // convert salary to number
+                formData.append(key, Number(form[key]));
+            } else if (key === "date_of_joining") {
+                // convert to ISO date string
+                formData.append(key, new Date(form[key]).toISOString());
+            } else {
+                formData.append(key, form[key]);
+            }
+        });
+
+        // Append file if selected
+        if (profilePic) formData.append("profilePic", profilePic);
 
         try {
-            await axios.post("/emp/employees",payload);
+            await axios.post("/emp/employees", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
             navigate("/employees");
         } catch (error) {
-            console.error("Error adding employee:", error);
+            const backendErrors = error.response?.data?.errors;
+            if (backendErrors && Array.isArray(backendErrors)) {
+                const newErrors = {};
+                backendErrors.forEach(err => {
+                    if (err.param) newErrors[err.param] = err.msg;
+                });
+                setErrors(newErrors);
+                console.log("Backend validation errors:", backendErrors);
+            } else {
+                console.error("Failed to add employee:", error.response?.data || error);
+            }
         }
     };
 
@@ -182,6 +221,32 @@ const AddEmployee = () => {
                         <MenuItem key={d} value={d}>{d}</MenuItem>
                     ))}
                 </TextField>
+
+                 {/* Profile Picture Upload */}
+                <Button variant="contained" component="label" sx={{ mt: 2 }}>
+                    Upload Profile Picture
+                    <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleFileChange}
+                    />
+                </Button>
+
+                {preview && (
+                    <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+                    <img
+                        src={preview}
+                        alt="Profile Preview"
+                        style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        }}
+                    />
+                    </Box>
+                )}
 
                 <Button
                     variant="contained"
