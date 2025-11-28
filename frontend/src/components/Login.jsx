@@ -28,24 +28,26 @@ export default function Login(){
         });
     };
 
-    const validate = () => {
-        const newErrors = {};
+    const validateLogin = (form) => {
+        const errors = {};
 
-        if(!form.email.trim()) newErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(form.email))
-            newErrors.email = "Invalid email format";
-
-        if(!form.password.trim()) newErrors.password = "Password is required";
-        else if (form.password.length < 6){
-            newErrors.password = "Password must be atleast 6 characaters";
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Valid if there're no errors
+        if (!form.email && !form.username)
+          errors.email = "Either email or username is required";
+      
+        if (form.email && !/\S+@\S+\.\S+/.test(form.email))
+          errors.email = "Invalid email format";
+      
+        if (!form.password.trim()) errors.password = "Password is required";
+      
+        return errors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationErrors = validateLogin(form);
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length > 0) return;
 
         try {
             const res = await api.post("/user/login", {

@@ -31,71 +31,78 @@ export default function UpdateEmployee(){
     const [errors, setErrors] = useState({});
     const[loading, setLoading] = useState(true);
 
-    // Fetch employee details to prefill the form
+    // Fetch employee details to prefill form
     useEffect(() => {
         const fetchEmployee = async () => {
-            try {
-                const res = await axios.get('/employees/${id}');
-
-                setForm({
-                    first_name: res.data.first_name,
-                    last_name: res.data.last_name,
-                    email: res.data.email,
-                    position: res.data.position,
-                    salary: res.data.salary,
-                    date_of_joining: res.data.date_of_joining?.split("T")[0],
-                    department: res.data.department
-                });
-                setLoading(false);
-            } catch (error){
-                console.error("Error fetching employee:", error);
-            }
+        try {
+            const res = await axios.get(`/emp/employees/${id}`);
+            setForm({
+            first_name: res.data.first_name,
+            last_name: res.data.last_name,
+            email: res.data.email,
+            position: res.data.position,
+            salary: res.data.salary,
+            date_of_joining: res.data.date_of_joining?.split("T")[0],
+            department: res.data.department,
+            });
+        } catch (error) {
+            console.error("Error fetching employee:", error);
+        } finally {
+            setLoading(false);
         }
+        };
         fetchEmployee();
     }, [id]);
 
     const handleChange = (e) => {
         setForm({...form, [e.target.name]: e.target.value});
-    }
+    };
 
     const validate = () => {
         const err = {};
         if (!form.first_name.trim()) err.first_name = "First name is required";
         if (!form.last_name.trim()) err.last_name = "Last name is required";
         if (!form.email.trim()) err.email = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(form.email))
+          err.email = "Invalid email format";
         if (!form.position.trim()) err.position = "Position is required";
         if (!form.salary) err.salary = "Salary is required";
+        else if (isNaN(form.salary)) err.salary = "Salary must be a number";
         if (!form.date_of_joining) err.date_of_joining = "Join date required";
         if (!form.department.trim()) err.department = "Department required";
     
         setErrors(err);
         return Object.keys(err).length === 0;
-      };
+    };
     
-      const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
         if (!validate()) return;
     
         try {
-          await axios.put(`/emp/employees/${id}`, form);
+            await axios.put(`/emp/employees/${id}`, {
+                ...form,
+                salary: Number(form.salary),
+                date_of_joining: new Date(form.date_of_joining),
+            });
           navigate("/employees");
         } catch (error) {
           console.error("Error updating employee:", error);
         }
-      };
+    };
     
-      if (loading) {
+    if (loading) {
         return (
           <Typography p={4} textAlign="center">
             Loading...
           </Typography>
         );
-      }
+    }
 
     return (
-        <Box>
-            <Card sx={{ width: 500, p: 4 }}>
+        <Box display="flex" justifyContent="center" p={4}>
+            <Card sx={{ width: 600, p: 4 }}>
                 <Typography variant="h5" mb={2}>
                     Edit Employee
                 </Typography>
@@ -197,6 +204,14 @@ export default function UpdateEmployee(){
 
                     <Button variant="contained" fullWidth sx={{ mt: 2 }} type="submit">
                         Update
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        sx={{ mt: 1 }}
+                        onClick={() => navigate("/employees")}
+                    >
+                        Cancel
                     </Button>
                 </form>
             </Card>  

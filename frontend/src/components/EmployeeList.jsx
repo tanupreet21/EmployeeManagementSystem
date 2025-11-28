@@ -16,12 +16,15 @@ import {
     CircularProgress,
   } from "@mui/material";
   import { Edit, Delete, Visibility } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeList = () => {
 
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEmployees = async() => {
@@ -76,7 +79,7 @@ const EmployeeList = () => {
                 ) : (
                     <TableContainer>
                         <Table>
-                            <TableHead sx={{ backgroundColor: "#f5f5f5"}}>
+                            <TableHead sx={{ backgroundColor: "#f5f5f5", '& th': { fontWeight: 600 }}}>
                                 <TableRow>
                                     <TableCell>Name</TableCell>
                                     <TableCell>Email</TableCell>
@@ -99,8 +102,21 @@ const EmployeeList = () => {
                                                 <TableCell>${emp.salary.toLocaleString()}</TableCell>
                                                 <TableCell>{new Date(emp.date_of_joining).toLocaleDateString()}</TableCell>
                                                 <TableCell align="center">
-                                                    <IconButton color="primary" onClick={() => alert(`View ${emp.first_name}`)}><Visibility /></IconButton>
-                                                    <IconButton color="secondary" onClick={() => alert(`Edit ${emp.first_name}`)}><Edit /></IconButton>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => navigate(`/employees/details/${emp._id}`)}
+                                                    >
+                                                        <Visibility />
+                                                    </IconButton>
+
+                                                    {/* Navigate to edit page */}
+                                                    <IconButton
+                                                        color="secondary"
+                                                        onClick={() => navigate(`/employees/update/${emp._id}`)}
+                                                    >
+                                                        <Edit />
+                                                    </IconButton>
+
                                                     <IconButton color="error" onClick={() => handleDelete(emp._id)}><Delete /></IconButton>
                                                 </TableCell>
 

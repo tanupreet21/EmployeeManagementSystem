@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Typography, Divider } from "@mui/material";
+import { Box, Card, Typography, Divider, Button } from "@mui/material";
 import axios from "../api/axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function EmployeeDetails(){
 
     const { id } = useParams();
+    const navigate = useNavigate();
     const [emp, setEmp] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-       axios.get(`/emp/employees/${id}`).then((res)=> setEmp(res.data));
+        const fetchEmployee = async () => {
+          try {
+            const res = await axios.get(`/emp/employees/${id}`);
+            setEmp(res.data);
+          } catch (error) {
+            console.error("Error fetching employee:", error);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchEmployee();
     }, [id]);
 
-    if (!emp){
-        return <Typography p={4}>Loading...</Typography>;
-    }
+    if (loading) return <Typography p={4}>Loading...</Typography>;
+    if (!emp) return <Typography p={4}>Employee not found</Typography>;
+
     return (
-        <Box display="flex" justifyContent="center" minHeight="100vh" p={4}>
-            <Card sx={{width: 500, p:4}}>
+        <Box display="flex" justifyContent="center" p={4}>
+            <Card sx={{width: 600, p:4}}>
                 <Typography variant="h5" mb={2}>
                     Employee Details
                 </Typography>
@@ -33,10 +45,23 @@ export default function EmployeeDetails(){
                 <Divider sx={{ my: 2 }} />
 
                 <Typography variant="caption" color="gray">
-                Created: {new Date(emp.created_at).toLocaleString()}
-                <br />
-                Updated: {new Date(emp.updated_at).toLocaleString()}
+                    Created: {new Date(emp.created_at).toLocaleString()}
+                    <br />
+                    Updated: {new Date(emp.updated_at).toLocaleString()}
                 </Typography>
+
+                <Box mt={3} display="flex" justifyContent="space-between">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate(`/employees/update/${id}`)}
+                    >
+                        Edit
+                    </Button>
+                    <Button variant="outlined" onClick={() => navigate("/employees")}>
+                        Back
+                    </Button>
+                </Box>
             </Card>
         </Box>
     );

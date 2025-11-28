@@ -35,30 +35,42 @@ const AddEmployee = () => {
         });
     };
 
-    const validate = () => {
-        const err = {};
-        if (!form.first_name.trim()) err.first_name = "First name is required";
-        if (!form.last_name.trim()) err.last_name = "Last name is required";
-        if (!form.email.trim()) err.email = "Email is required";
-          // Email format validation
-        else if (!/\S+@\S+\.\S+/.test(form.email)) {
-            err.email = "Invalid email format";
-        }
+    const validateEmployee = (form) => {
+        const errors = {};
 
-        if (!form.position.trim()) err.position = "Position is required";
-        if (!form.salary) err.salary = "Salary is required";
-        if (!form.date_of_joining) err.date_of_joining = "Join date required";
-        if (!form.department.trim()) err.department = "Department required";
-
-        setErrors(err);
-        return Object.keys(err).length === 0;
+        // First & last name (only letters)
+        if (!form.first_name.trim()) errors.first_name = "First name is required";
+        else if (!/^[A-Za-z]+$/.test(form.first_name))
+          errors.first_name = "First name should contain only letters";
+      
+        if (!form.last_name.trim()) errors.last_name = "Last name is required";
+        else if (!/^[A-Za-z]+$/.test(form.last_name))
+          errors.last_name = "Last name should contain only letters";
+      
+        // Email
+        if (!form.email.trim()) errors.email = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(form.email))
+          errors.email = "Invalid email format";
+      
+        // Salary
+        if (!form.salary) errors.salary = "Salary is required";
+        else if (isNaN(form.salary)) errors.salary = "Salary must be a number";
+      
+        // Date of joining
+        if (!form.date_of_joining) errors.date_of_joining = "Hire date is required";
+        else if (!/^\d{4}-\d{2}-\d{2}$/.test(form.date_of_joining))
+          errors.date_of_joining = "Hire date must be valid (YYYY-MM-DD)";
+      
+        return errors;
     };
 
     const handleSubmit = async(e) => {
 
         e.preventDefault();
 
-        if(!validate()) return;
+        const validationErrors = validateEmployee(form);
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length > 0) return;
 
         const payload = {
             ...form,
@@ -75,7 +87,7 @@ const AddEmployee = () => {
     };
 
     return(
-        <Box display="flex" justifyContent="centre" minheight="100vh" p={4}>
+        <Box display="flex" justifyContent="center" minheight="100vh" p={4}>
             <Card sx={{ width: 500, p: 4 }}>
                 <Typography variant="h5" mb={2}>
                     Add Employee
