@@ -40,6 +40,11 @@ const AddEmployee = () => {
         if (!form.first_name.trim()) err.first_name = "First name is required";
         if (!form.last_name.trim()) err.last_name = "Last name is required";
         if (!form.email.trim()) err.email = "Email is required";
+          // Email format validation
+        else if (!/\S+@\S+\.\S+/.test(form.email)) {
+            err.email = "Invalid email format";
+        }
+
         if (!form.position.trim()) err.position = "Position is required";
         if (!form.salary) err.salary = "Salary is required";
         if (!form.date_of_joining) err.date_of_joining = "Join date required";
@@ -55,13 +60,20 @@ const AddEmployee = () => {
 
         if(!validate()) return;
 
+        const payload = {
+            ...form,
+            salary: Number(form.salary),
+            date_of_joining: new Date(form.date_of_joining)
+          };         
+
         try {
-            await axios.post("/employees",form);
+            await axios.post("/emp/employees",payload);
             navigate("/employees");
         } catch (error) {
             console.error("Error adding employee:", error);
         }
     };
+
     return(
         <Box display="flex" justifyContent="centre" minheight="100vh" p={4}>
             <Card sx={{ width: 500, p: 4 }}>

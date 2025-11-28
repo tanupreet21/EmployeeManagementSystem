@@ -4,8 +4,14 @@ const initDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const errorHandler = require('./middleware/errorHandler');
-
+const cors = require('cors');
 const app = express();
+
+// Allow requests from frontend
+app.use(cors({
+    origin: "http://localhost:3001",  // your frontend URL
+    credentials: true
+  }));
 
 app.use(express.json()); // parse requests that have JSON body
 

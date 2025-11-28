@@ -9,7 +9,7 @@ export default function EmployeeDetails(){
     const [emp, setEmp] = useState(null);
 
     useEffect(() => {
-       axios.get('/employees/${id}').then((res)=> setEmp(res.data));
+       axios.get(`/emp/employees/${id}`).then((res)=> setEmp(res.data));
     }, [id]);
 
     if (!emp){

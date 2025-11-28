@@ -8,12 +8,13 @@ import {
     Typography,
     Link,
   } from "@mui/material";
+import api from "../api/axios";   
 
 const SignUp = () => {
     const navigate = useNavigate();
 
     const[form, setForm] = useState({
-        userName:"",
+        username:"",
         email:"",
         password:"",
         confirmPassword:""
@@ -28,7 +29,7 @@ const SignUp = () => {
     const validate = () => {
         const err = {};
     
-        if (!form.userName.trim()) err.userName = "Username is required";
+        if (!form.username.trim()) err.username = "Username is required";
         if (!form.email.trim()) err.email = "Email is required";
         else if (!/\S+@\S+\.\S+/.test(form.email))
           err.email = "Invalid email format";
@@ -45,12 +46,17 @@ const SignUp = () => {
         return Object.keys(err).length === 0;
       };
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
     
-        console.log("Signup form:", form);
-        navigate("/login");
+        try {
+          const res = await api.post("/user/signup", form);
+          console.log(res.data);
+          navigate("/login"); // navigate to login after signup
+        } catch (error) {
+          setErrors({ api: error.response?.data?.message || "Signup failed" });
+        }
     };
 
     return (
@@ -72,10 +78,10 @@ const SignUp = () => {
                 label="Username"
                 name="username"
                 margin="normal"
-                value={form.UserName}
+                value={form.username}
                 onChange={handleChange}
-                error={Boolean(errors.userName)}
-                helperText={errors.userName}
+                error={Boolean(errors.username)}
+                helperText={errors.username}
               />
     
               <TextField

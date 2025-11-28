@@ -11,7 +11,7 @@ import EmployeeDetails from './components/EmployeeDetails';
 
 function Layout({children}){
   const location = useLocation();
-  const hideNavbar = location.pathname === "/" || location.pathname === "/signup";
+  const hideNavbar = location.pathname === "/" || location.pathname === "/signup" || location.pathname === "/login";
 
   return (
     <>
@@ -26,12 +26,12 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Login/>}/>
-          <Route path="/signup" element={<SignUp/>}/>
-          <Route path="/employees" element={<EmployeeList/>}/>
-          <Route path="/employee/add" element={<AddEmployee/>}/>
-          <Route path="/employee/update/:id" element={<UpdateEmployee/>}/>
-          <Route path="employees/details/:id" element={<EmployeeDetails/>}/>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/employees" element={<EmployeeList />} />
+        <Route path="/employees/add" element={<AddEmployee />} />
+        <Route path="/employees/update/:id" element={<UpdateEmployee />} />
+        <Route path="/employees/details/:id" element={<EmployeeDetails />} />
         </Routes>
       </Layout>
     </Router>

@@ -8,6 +8,7 @@ import {
     Typography,
     Link,
   } from "@mui/material";
+  import api from "../api/axios";    
 
 export default function Login(){
     const navigate = useNavigate();
@@ -43,14 +44,20 @@ export default function Login(){
         return Object.keys(newErrors).length === 0; // Valid if there're no errors
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if(!validate()) return;
+        try {
+            const res = await api.post("/user/login", {
+                email: form.email,
+                password: form.password
+            });
 
-        console.log("Login data:", form);
-        //Redirect to home page
-        navigate("/employees");
+            localStorage.setItem("token", res.data.jwt_token);
+            navigate("/employees");
+        } catch (error){
+            setErrors({ api: error.response?.data?.message || "Login failed"});
+        }
     };
 
     return (

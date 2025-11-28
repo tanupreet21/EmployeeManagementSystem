@@ -78,7 +78,7 @@ export default function UpdateEmployee(){
         if (!validate()) return;
     
         try {
-          await axios.put(`/employees/${id}`, form);
+          await axios.put(`/emp/employees/${id}`, form);
           navigate("/employees");
         } catch (error) {
           console.error("Error updating employee:", error);

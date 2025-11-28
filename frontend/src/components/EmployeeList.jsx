@@ -26,7 +26,7 @@ const EmployeeList = () => {
     useEffect(() => {
         const fetchEmployees = async() => {
             try {
-                const response = await axios.get("/employees");
+                const response = await axios.get("/emp/employees");
                 setEmployees(response.data);
             } catch (err){
                 console.error("Error fetching employees:", err);
@@ -41,7 +41,7 @@ const EmployeeList = () => {
         if (!window.confirm("Delete this employee?")) return;
 
         try {
-          await axios.delete(`/employees/${id}`);
+          await axios.delete(`/emp/employees/${id}`);
           setEmployees((prev) => prev.filter((e) => e._id !== id));
         } catch (err) {
           console.error("Delete failed:", err);
