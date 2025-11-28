@@ -47,3 +47,20 @@ exports.deleteEmployee = async(req, res) => {
     }   
 }
 
+//Search employee by department or position
+// GET /emp/employees/search?department=HR&position=Manager
+exports.searchEmployees = async(req, res) => {
+    try {
+        const { department, position } = req.query;
+
+        const filter = {};
+        if (department) filter.department = department;
+        if (position) filter.position = position;
+    
+        const employees = await Employee.find(filter);
+        res.json(employees);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+}
+

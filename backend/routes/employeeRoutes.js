@@ -7,7 +7,8 @@ const {
     createEmployee,
     getEmployeeById,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    searchEmployees
 } = require('../controllers/employeeController');
 // Import validations
 const {
@@ -19,11 +20,13 @@ const {
 router.use(auth);
 
 // Defining routes
+router.get('/employees/search', searchEmployees);
 //Validation middleware runs before controller
 router.get('/employees', getAllEmployees);
 router.post('/employees', validateEmployee, createEmployee);
 router.get('/employees/:eid', validateEmployeeId, getEmployeeById);
 router.put('/employees/:eid', validateEmployeeId, validateEmployee, updateEmployee);
 router.delete('/employees/:eid', validateEmployeeId, deleteEmployee);
+
 
 module.exports = router;
