@@ -18,7 +18,7 @@ export default function UpdateEmployee(){
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:3000";
 
     const [ form, setForm ] = useState({
         first_name:"",

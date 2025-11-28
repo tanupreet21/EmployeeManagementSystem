@@ -10,7 +10,7 @@ export default function EmployeeDetails(){
     const [emp, setEmp] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const backendURL = process.env.REACT_APP_BACKEND_URL;
+    const backendURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:3000";
 
 
     useEffect(() => {

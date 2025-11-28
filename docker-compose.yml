@@ -5,11 +5,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3001:3000" # host:container
+      - "3001:3000" # frontend container:3000 -> host:3001
     depends_on:
       - backend
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:3000
+      - REACT_APP_BACKEND_URL=http://localhost:3000/api/v1
     restart: unless-stopped
 
   backend:
@@ -17,12 +17,12 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:3000" # backend container:3000 -> host:3000
     depends_on:
       - mongodb
     environment:
       - MONGO_URI=mongodb://mongodb:27017/mydatabase
-      - FRONTEND_URL=http://localhost:3000
+      - FRONTEND_URL=http://localhost:3001
     restart: unless-stopped
 
   mongodb:
