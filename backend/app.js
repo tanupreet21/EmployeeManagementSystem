@@ -12,8 +12,22 @@ const allowedOrigins = [
   "http://frontend:3000" // container-to-container
 ];
 
+app.use(cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (Postman, mobile apps)
+      if (!origin) return callback(null, true);
+  
+      if (!allowedOrigins.includes(origin)) {
+        return callback(new Error("CORS not allowed from this origin"), false);
+      }
+  
+      return callback(null, true);
+    },
+    credentials: true
+  }));
+
 app.use(express.json()); // parse requests that have JSON body
-app.use('/uploads', express.static('uploads'));
+app.use('/api/v1/uploads', express.static('uploads'));
 
 
 // Routes
