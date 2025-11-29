@@ -3,7 +3,7 @@
 Full Stack development
 
 ## Technologies used
-React, Express, Nodejs, MongoDB, Docker
+React, Express, Nodejs, MongoDB, Material UI, Docker
 
 ## Goal of assignment
 Learn full stack development. It's basically a CRUD app with search endpoint and profile picture upload feature.
