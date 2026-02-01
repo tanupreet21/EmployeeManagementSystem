@@ -1,10 +1,7 @@
-### COMP 3123 - ASSIGNMENT 2
-
-Full Stack development
+#### Employee management system
+### This app demonstrates full stack development using Nodejs, Expressjs, React and MongoDb. The app provides CRUD functionality along with search endpoint and profile picture upload feature. It also uses JWT for authentication/authorisation.
 
 ## Technologies used
-React, Express, Nodejs, MongoDB, Material UI, Docker
+React, Express, Nodejs, Rest APIs, MongoDB, Material UI, Docker, JWT, bcrypt
 
-## Goal of assignment
-Learn full stack development. It's basically a CRUD app with search endpoint and profile picture upload feature.
 
